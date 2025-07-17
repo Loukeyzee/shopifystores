@@ -46,7 +46,9 @@
   "dependencies": {
     "@jito-foundation/jito-ts": "^3.0.1",
     "@solana/web3.js": "^1.87.6",
+    "@solana/spl-token": "^0.3.8",
     "axios": "^1.6.2",
+    "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
