@@ -63,10 +63,12 @@ import {
   FaEyeSlash,
   FaCheck,
   FaTimes,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaBolt
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { theme } from './theme';
+import LaunchMonitorPanel from './components/LaunchMonitorPanel';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -505,13 +507,19 @@ function App() {
           {/* Main Content */}
           <Tabs variant="enclosed" colorScheme="blue">
             <TabList>
-              <Tab><Icon as={FaRocket} mr={2} />Launch Protection</Tab>
+              <Tab><Icon as={FaBolt} mr={2} />Instant Monitor</Tab>
+              <Tab><Icon as={FaRocket} mr={2} />Manual Protection</Tab>
               <Tab><Icon as={FaChartLine} mr={2} />Statistics</Tab>
               <Tab><Icon as={FaCog} mr={2} />Settings</Tab>
             </TabList>
 
             <TabPanels>
-              {/* Launch Protection Tab */}
+              {/* Instant Monitor Tab */}
+              <TabPanel>
+                <LaunchMonitorPanel />
+              </TabPanel>
+
+              {/* Manual Protection Tab */}
               <TabPanel>
                 <Grid templateColumns="repeat(12, 1fr)" gap={6}>
                   {/* Configuration Panel */}

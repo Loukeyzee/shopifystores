@@ -276,6 +276,22 @@ class SolanaProtectorApp {
       return await this.licenseManager.getLicenseInfo();
     });
 
+    // Launch monitoring handlers
+    ipcMain.handle('start-launch-monitoring', async (event, config) => {
+      if (!this.isLicenseValid) {
+        throw new Error('Valid license required');
+      }
+      return await this.protectionService.startLaunchMonitoring(config);
+    });
+
+    ipcMain.handle('stop-launch-monitoring', async () => {
+      return await this.protectionService.stopLaunchMonitoring();
+    });
+
+    ipcMain.handle('get-launch-monitor-status', async () => {
+      return this.protectionService.getLaunchMonitorStatus();
+    });
+
     // Protection services (only work if license is valid)
     ipcMain.handle('start-protection', async (event, config) => {
       if (!this.isLicenseValid) {
@@ -358,10 +374,38 @@ class SolanaProtectorApp {
         // Show license activation dialog
         this.mainWindow.webContents.send('show-license-activation');
       }
+
+      // Set up protection service event forwarding to GUI
+      if (this.isLicenseValid && this.protectionService) {
+        this.setupProtectionServiceEvents();
+      }
     } catch (error) {
       console.error('License check failed:', error);
       this.isLicenseValid = false;
     }
+  }
+
+  setupProtectionServiceEvents() {
+    // Forward protection service events to GUI
+    this.protectionService.on('token-detected', (tokenData) => {
+      this.mainWindow.webContents.send('token-detected', tokenData);
+    });
+
+    this.protectionService.on('protection-triggered', (data) => {
+      this.mainWindow.webContents.send('protection-triggered', data);
+    });
+
+    this.protectionService.on('protection-success', (data) => {
+      this.mainWindow.webContents.send('protection-success', data);
+    });
+
+    this.protectionService.on('protection-error', (data) => {
+      this.mainWindow.webContents.send('protection-error', data);
+    });
+
+    this.protectionService.on('monitor-stats-updated', (stats) => {
+      this.mainWindow.webContents.send('monitor-stats-updated', stats);
+    });
   }
 }
 
