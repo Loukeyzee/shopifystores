@@ -69,6 +69,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { theme } from './theme';
 import LaunchMonitorPanel from './components/LaunchMonitorPanel';
+import WalletGeneratorPanel from './components/WalletGeneratorPanel';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -509,6 +510,7 @@ function App() {
             <TabList>
               <Tab><Icon as={FaBolt} mr={2} />Instant Monitor</Tab>
               <Tab><Icon as={FaRocket} mr={2} />Manual Protection</Tab>
+              <Tab><Icon as={FaKey} mr={2} />Wallet Generator</Tab>
               <Tab><Icon as={FaChartLine} mr={2} />Statistics</Tab>
               <Tab><Icon as={FaCog} mr={2} />Settings</Tab>
             </TabList>
@@ -824,6 +826,11 @@ function App() {
                     </VStack>
                   </GridItem>
                 </Grid>
+              </TabPanel>
+
+              {/* Wallet Generator Tab */}
+              <TabPanel>
+                <WalletGeneratorPanel />
               </TabPanel>
 
               {/* Statistics Tab */}

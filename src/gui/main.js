@@ -8,12 +8,14 @@ const windowStateKeeper = require('electron-window-state');
 const LicenseManager = require('./services/licenseManager');
 const ProtectionService = require('./services/protectionService');
 const { encryptedRequire } = require('./utils/codeProtection');
+const WalletHandlers = require('../electron/walletHandlers');
 
 class SolanaProtectorApp {
   constructor() {
     this.mainWindow = null;
     this.licenseManager = new LicenseManager();
     this.protectionService = new ProtectionService();
+    this.walletHandlers = new WalletHandlers();
     this.isLicenseValid = false;
   }
 
