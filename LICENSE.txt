@@ -1,0 +1,8 @@
+Commercial License
+
+Copyright (c) 2024 Your Company
+
+This software is provided under a commercial license. 
+Unauthorized distribution, modification, or reverse engineering is prohibited.
+
+For licensing inquiries, contact: licensing@your-company.com

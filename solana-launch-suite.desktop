@@ -1,0 +1,21 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Solana Launch Suite
+Comment=Secure wallet generator and launch trading manager for Solana
+Exec=/path/to/Solana-Launch-Suite-Linux.AppImage
+Icon=solana-launch-suite
+Categories=Office;Finance;Utility;
+Terminal=false
+StartupNotify=true
+MimeType=application/json;
+
+[Desktop Action Generate]
+Name=Generate New Wallets
+Exec=/path/to/Solana-Launch-Suite-Linux.AppImage --generate
+
+[Desktop Action Guide]
+Name=Open PDF Guide
+Exec=xdg-open /path/to/Solana-Launch-Suite-Guide.pdf
+
+Actions=Generate;Guide;

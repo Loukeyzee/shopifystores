@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Solana Launch Suite - Secure Wallet Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            text-align: center;
+            color: white;
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .downloads {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .download-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .platform-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .platform-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2D3748;
+        }
+        
+        .platform-description {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .file-info {
+            font-size: 14px;
+            color: #A0AEC0;
+        }
+        
+        .security-notice {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 60px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .security-notice h3 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .security-feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .quick-start {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+        
+        .quick-start h3 {
+            color: #2D3748;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .step {
+            padding: 20px;
+            border-radius: 10px;
+            background: #F7FAFC;
+            border-left: 5px solid #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .auto-detect {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auto-detect-btn {
+            background: #48BB78;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .auto-detect-btn:hover {
+            background: #38A169;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px;">🔐</div>
+            <h1>Solana Launch Suite</h1>
+            <div class="subtitle">Secure Wallet Generator & Launch Trading Manager</div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🛡️</div>
+                    <div>100% Secure</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💻</div>
+                    <div>Local Generation</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚀</div>
+                    <div>Launch Trading</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <div>Cross-Platform</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="auto-detect">
+            <button class="auto-detect-btn" onclick="autoDetectPlatform()">
+                🎯 Auto-Detect My Platform & Download
+            </button>
+            <div style="color: white; font-size: 16px;">
+                Or choose your platform manually below
+            </div>
+        </div>
+
+        <div class="downloads">
+            <div class="download-card">
+                <div class="platform-icon">🪟</div>
+                <div class="platform-name">Windows</div>
+                <div class="platform-description">
+                    1-click installer for Windows 10/11<br>
+                    Zero configuration required<br>
+                    Desktop shortcuts included
+                </div>
+                <a href="#" class="download-btn" onclick="downloadWindows()">
+                    Download for Windows
+                </a>
+                <div class="file-info">
+                    Setup.exe • ~150MB • Windows 10+
+                </div>
+            </div>
+
+            <div class="download-card">
+                <div class="platform-icon">🍎</div>
+                <div class="platform-name">macOS</div>
+                <div class="platform-description">
+                    Beautiful DMG installer for macOS<br>
+                    Drag-and-drop installation<br>
+                    Universal binary (Intel & Apple Silicon)
+                </div>
+                <a href="#" class="download-btn" onclick="downloadMac()">
+                    Download for macOS
+                </a>
+                <div class="file-info">
+                    .dmg • ~160MB • macOS 10.15+
+                </div>
+            </div>
+
+            <div class="download-card">
+                <div class="platform-icon">🐧</div>
+                <div class="platform-name">Linux</div>
+                <div class="platform-description">
+                    Portable AppImage for all distributions<br>
+                    No installation required<br>
+                    Just download and run
+                </div>
+                <a href="#" class="download-btn" onclick="downloadLinux()">
+                    Download for Linux
+                </a>
+                <div class="file-info">
+                    .AppImage • ~140MB • Most distributions
+                </div>
+            </div>
+        </div>
+
+        <div class="security-notice">
+            <h3>🛡️ Your Security is Our Priority</h3>
+            <p>All wallet generation happens locally on your device. Your private keys never leave your computer.</p>
+            
+            <div class="security-features">
+                <div class="security-feature">
+                    <strong>🔐 Military-Grade Encryption</strong><br>
+                    AES-256 with PBKDF2 key derivation
+                </div>
+                <div class="security-feature">
+                    <strong>🏠 100% Local</strong><br>
+                    No cloud storage, no servers involved
+                </div>
+                <div class="security-feature">
+                    <strong>📖 Complete Guide</strong><br>
+                    Comprehensive PDF manual included
+                </div>
+                <div class="security-feature">
+                    <strong>🔄 Cross-Platform</strong><br>
+                    Works on Windows, Mac, and Linux
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-start">
+            <h3>🚀 Quick Start (Takes 5 Minutes)</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <strong>Download & Install</strong><br>
+                    Choose your platform and download. Installation is automatic.
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <strong>Generate Wallets</strong><br>
+                    Create secure wallets with the built-in generator.
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <strong>Start Trading</strong><br>
+                    Load wallets and begin coordinated launch trading.
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <strong>Read the Guide</strong><br>
+                    Complete PDF guide with security best practices.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function autoDetectPlatform() {
+            const platform = navigator.platform.toLowerCase();
+            const userAgent = navigator.userAgent.toLowerCase();
+            
+            if (platform.includes('win') || userAgent.includes('windows')) {
+                downloadWindows();
+            } else if (platform.includes('mac') || userAgent.includes('mac')) {
+                downloadMac();
+            } else if (platform.includes('linux') || userAgent.includes('linux')) {
+                downloadLinux();
+            } else {
+                alert('Could not detect your platform. Please choose manually below.');
+            }
+        }
+        
+        function downloadWindows() {
+            // Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'installer',
+                    'event_label': 'windows'
+                });
+            }
+            
+            alert('🪟 Starting Windows download...\n\nAfter download:\n1. Run the installer\n2. Click "Run anyway" if Windows blocks it\n3. Follow the setup wizard\n4. Launch from desktop shortcut');
+            
+            // Replace with actual download URL
+            window.location.href = 'dist/Solana-Launch-Suite-Windows-Installer.exe';
+        }
+        
+        function downloadMac() {
+            // Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'installer',
+                    'event_label': 'macos'
+                });
+            }
+            
+            alert('🍎 Starting macOS download...\n\nAfter download:\n1. Open the DMG file\n2. Drag app to Applications\n3. Right-click and "Open" on first launch\n4. Allow in Security & Privacy if needed');
+            
+            // Replace with actual download URL
+            window.location.href = 'dist/Solana-Launch-Suite-macOS.dmg';
+        }
+        
+        function downloadLinux() {
+            // Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'installer',
+                    'event_label': 'linux'
+                });
+            }
+            
+            alert('🐧 Starting Linux download...\n\nAfter download:\n1. Make executable: chmod +x Solana-Launch-Suite-Linux.AppImage\n2. Double-click to run\n3. Or run from terminal: ./Solana-Launch-Suite-Linux.AppImage');
+            
+            // Replace with actual download URL
+            window.location.href = 'dist/Solana-Launch-Suite-Linux.AppImage';
+        }
+    </script>
+</body>
+</html>
