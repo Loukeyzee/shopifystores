@@ -1,6 +1,7 @@
 const { Connection, PublicKey, Keypair, Transaction, SystemProgram, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const { Token, TOKEN_PROGRAM_ID } = require('@solana/spl-token');
 const EventEmitter = require('events');
+const PlatformIntegration = require('./platformIntegration');
 
 class VolumeBot extends EventEmitter {
   constructor(config = {}) {
@@ -9,6 +10,7 @@ class VolumeBot extends EventEmitter {
     this.isRunning = false;
     this.wallets = [];
     this.currentToken = null;
+    this.platformIntegration = new PlatformIntegration();
     
     this.config = {
       minTradeAmount: config.minTradeAmount || 0.001, // SOL
@@ -311,53 +313,47 @@ class VolumeBot extends EventEmitter {
     }
   }
 
-  // Execute Pump.fun trade
-  async executePumpFunTrade(wallet, isBuy, amount) {
-    // This would contain actual Pump.fun trading logic
-    // For demonstration, we'll simulate the trade
+  // Execute platform-specific trade
+  async executePlatformTrade(wallet, isBuy, amount) {
+    console.log(`💰 ${wallet.address.slice(0, 8)}... executing ${isBuy ? 'BUY' : 'SELL'} ${amount} SOL on ${this.currentToken.platform}`);
     
-    const transaction = new Transaction();
-    
-    if (isBuy) {
-      // Simulate buy transaction
-      transaction.add(
-        SystemProgram.transfer({
-          fromPubkey: wallet.keypair.publicKey,
-          toPubkey: new PublicKey(this.currentToken.address),
-          lamports: Math.floor(amount * LAMPORTS_PER_SOL)
-        })
+    try {
+      // Use platform integration for actual trading
+      const result = await this.platformIntegration.executeTrade(
+        this.currentToken.platform,
+        this.currentToken.address,
+        wallet,
+        isBuy,
+        amount
       );
-    } else {
-      // Simulate sell transaction
-      transaction.add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(this.currentToken.address),
-          toPubkey: wallet.keypair.publicKey,
-          lamports: Math.floor(amount * LAMPORTS_PER_SOL * 0.95) // 5% slippage
-        })
-      );
+      
+      if (result.success) {
+        console.log(`✅ ${result.type.toUpperCase()} completed: ${result.signature} | Impact: ${result.impact}%`);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`❌ Platform trade failed: ${error.message}`);
+      
+      // Fallback simulation
+      return {
+        success: false,
+        error: error.message,
+        amount,
+        type: isBuy ? 'buy' : 'sell',
+        platform: this.currentToken.platform
+      };
     }
-
-    // Get recent blockhash
-    const { blockhash } = await this.connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet.keypair.publicKey;
-
-    // Sign and simulate (not actually send for demo)
-    transaction.sign(wallet.keypair);
-    
-    return {
-      signature: 'simulated_signature_' + Date.now(),
-      success: true,
-      amount,
-      type: isBuy ? 'buy' : 'sell'
-    };
   }
 
-  // Execute Pump.swap trade
+  // Execute Pump.fun trade (legacy - now uses platform integration)
+  async executePumpFunTrade(wallet, isBuy, amount) {
+    return await this.executePlatformTrade(wallet, isBuy, amount);
+  }
+
+  // Execute Pump.swap trade (legacy - now uses platform integration)
   async executePumpSwapTrade(wallet, isBuy, amount) {
-    // Similar to Pump.fun but with Pump.swap specific logic
-    return await this.executePumpFunTrade(wallet, isBuy, amount);
+    return await this.executePlatformTrade(wallet, isBuy, amount);
   }
 
   // Get random available wallet

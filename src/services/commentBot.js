@@ -1,5 +1,6 @@
 const axios = require('axios');
 const EventEmitter = require('events');
+const PlatformIntegration = require('./platformIntegration');
 
 class CommentBot extends EventEmitter {
   constructor(config = {}) {
@@ -7,6 +8,7 @@ class CommentBot extends EventEmitter {
     this.isRunning = false;
     this.commentAccounts = [];
     this.currentToken = null;
+    this.platformIntegration = new PlatformIntegration();
     
     this.config = {
       commentInterval: config.commentInterval || 180000, // 3 minutes
@@ -502,27 +504,31 @@ class CommentBot extends EventEmitter {
   // Post comment to platform
   async postComment(account, comment) {
     try {
-      // Simulate API call to post comment
-      // In production, implement actual API calls for each platform
+      console.log(`📝 ${account.username}: "${comment.text}" on ${this.currentToken.platform}`);
       
-      const platform = this.currentToken.platform;
-      let apiUrl;
+      // Use platform integration to post comment
+      const result = await this.platformIntegration.postComment(
+        this.currentToken.platform,
+        this.currentToken.address,
+        comment.text,
+        account
+      );
       
-      if (platform === 'pump.fun') {
-        apiUrl = `https://frontend-api.pump.fun/comments`;
-      } else if (platform === 'pump.swap') {
-        apiUrl = `https://api.pumpswap.io/comments`;
+      if (result.success) {
+        console.log(`✅ Comment posted successfully: ${result.threadUrl}`);
+        
+        // Track engagement after posting
+        setTimeout(async () => {
+          const engagement = await this.platformIntegration.trackCommentEngagement(
+            result.platform,
+            result.commentId
+          );
+          account.engagement.likes += engagement.likes;
+          account.engagement.replies += engagement.replies;
+        }, 60000); // Check after 1 minute
       }
-
-      // Simulate successful post (replace with real API call)
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
       
-      return {
-        success: true,
-        commentId: 'comment_' + Date.now(),
-        timestamp: Date.now(),
-        engagement: Math.floor(Math.random() * 10) + 1 // Simulated engagement
-      };
+      return result;
     } catch (error) {
       console.error('Failed to post comment:', error);
       return { success: false, error: error.message };

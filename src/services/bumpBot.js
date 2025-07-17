@@ -1,6 +1,7 @@
 const { Connection, PublicKey, Keypair, Transaction, SystemProgram, LAMPORTS_PER_SOL } = require('@solana/web3.js');
 const axios = require('axios');
 const EventEmitter = require('events');
+const PlatformIntegration = require('./platformIntegration');
 
 class BumpBot extends EventEmitter {
   constructor(config = {}) {
@@ -9,6 +10,7 @@ class BumpBot extends EventEmitter {
     this.isRunning = false;
     this.bumpWallets = [];
     this.currentToken = null;
+    this.platformIntegration = new PlatformIntegration();
     
     this.config = {
       bumpAmount: config.bumpAmount || 0.01, // SOL per bump
@@ -217,24 +219,13 @@ class BumpBot extends EventEmitter {
   // Get current trending position
   async getCurrentTrendingPosition() {
     try {
-      const platform = this.currentToken.platform;
-      let apiUrl;
+      const result = await this.platformIntegration.getTrendingPosition(
+        this.currentToken.platform,
+        this.currentToken.address
+      );
       
-      if (platform === 'pump.fun') {
-        apiUrl = 'https://frontend-api.pump.fun/coins/trending';
-      } else if (platform === 'pump.swap') {
-        apiUrl = 'https://api.pumpswap.io/tokens/trending';
-      }
-
-      const response = await axios.get(apiUrl, { timeout: 5000 });
-      const trendingTokens = response.data.tokens || response.data;
-      
-      const position = trendingTokens.findIndex(token => 
-        token.mint === this.currentToken.address || 
-        token.address === this.currentToken.address
-      ) + 1;
-
-      return position > 0 ? position : 999; // 999 if not in trending
+      console.log(`📊 Current position: #${result.position} on ${result.platform}`);
+      return result.position;
     } catch (error) {
       console.error('Failed to fetch trending position:', error);
       return 999;
@@ -421,34 +412,45 @@ class BumpBot extends EventEmitter {
     }
   }
 
-  // Execute Pump.fun bump
-  async executePumpFunBump(wallet, amount) {
-    // Simulate Pump.fun bump transaction
-    const transaction = new Transaction();
+  // Execute platform-specific bump
+  async executePlatformBump(wallet, amount) {
+    console.log(`📈 Executing bump: ${amount} SOL on ${this.currentToken.platform}`);
     
-    // Add bump transaction (small buy)
-    transaction.add(
-      SystemProgram.transfer({
-        fromPubkey: wallet.keypair.publicKey,
-        toPubkey: new PublicKey(this.currentToken.address),
-        lamports: Math.floor(amount * LAMPORTS_PER_SOL)
-      })
-    );
-
-    const { blockhash } = await this.connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = wallet.keypair.publicKey;
-    transaction.sign(wallet.keypair);
-    
-    return {
-      signature: 'bump_signature_' + Date.now(),
-      success: true
-    };
+    try {
+      // Use platform integration for bump trade (always a buy)
+      const result = await this.platformIntegration.executeTrade(
+        this.currentToken.platform,
+        this.currentToken.address,
+        wallet,
+        true, // Always buy for bumps
+        amount
+      );
+      
+      if (result.success) {
+        console.log(`✅ Bump successful: ${result.signature}`);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`❌ Bump failed: ${error.message}`);
+      
+      // Fallback simulation
+      return {
+        success: false,
+        error: error.message,
+        signature: `bump_failed_${Date.now()}`
+      };
+    }
   }
 
-  // Execute Pump.swap bump
+  // Execute Pump.fun bump (legacy - now uses platform integration)
+  async executePumpFunBump(wallet, amount) {
+    return await this.executePlatformBump(wallet, amount);
+  }
+
+  // Execute Pump.swap bump (legacy - now uses platform integration)
   async executePumpSwapBump(wallet, amount) {
-    return await this.executePumpFunBump(wallet, amount);
+    return await this.executePlatformBump(wallet, amount);
   }
 
   // Start trend analysis
